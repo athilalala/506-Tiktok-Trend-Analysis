@@ -6,9 +6,12 @@
    Succesfully predict whether a Tiktok video will preform better than average using its caption text, hashtags, visual content, and early engagement metrics within the first 24–72 hours after posting while
    extracting visual features from video frames through computer vision techniques to evaluate their contribution to virality prediction.
 
-**3. Data Collection Plan **
+**3. Data Collection Plan**
    Potential Data Sources:
+    
     Public TikTok datasets from platforms such as Kaggle and HuggingFace containing captions, hashtags, engagement metrics, and video metadata.
+   
    Data Collection Method:
+     
      Primary data will be obtained from publicly available datasets.
      If additional data is required, publicly accessible TikTok content will be collected using ethical scraping tools to obtain captions, engagement metrics, and video links.
