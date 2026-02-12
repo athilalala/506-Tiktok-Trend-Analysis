@@ -9,9 +9,9 @@
 **3. Data Collection Plan**
    Potential Data Sources:
     
-    Public TikTok datasets from platforms such as Kaggle and HuggingFace containing captions, hashtags, engagement metrics, and video metadata.
+   Public TikTok datasets from platforms such as Kaggle and HuggingFace containing captions, hashtags, engagement metrics, and video metadata.
    
    Data Collection Method:
      
-     Primary data will be obtained from publicly available datasets.
-     If additional data is required, publicly accessible TikTok content will be collected using ethical scraping tools to obtain captions, engagement metrics, and video links.
+   Primary data will be obtained from publicly available datasets.
+   If additional data is required, publicly accessible TikTok content will be collected using ethical scraping tools to obtain captions, engagement metrics, and video links.
