@@ -3,6 +3,17 @@
    
    This project focuses on understanding and predicting TikTok video virality using a multimodal data science approach. We plan to combine Natural Language Processing (NLP) techniques to analyze captions, titles,      and hashtags, along with Computer Vision methods to study the visual content of videos. We’ll also look at early engagement signals like initial views, likes, and comments. By bringing these different aspects       together, the goal is to identify what factors most strongly influence virality and see whether combining them leads to better prediction performance.
 
+   Timeline:
+   Data Collection (1 week): Identification and acquisition of multimodal TikTok datasets (text, engagement metrics, video content).
+   
+   Data Preprocessing (1 week): Text cleaning, handling missing data, normalization of engagement metrics, video frame preparation.
+   
+   Feature Engineering (3 weeks): Extraction of NLP features (captions/hashtags), computer vision features from video frames, and early engagement indicators.
+   
+   Exploratory Analysis & Visualization (1 week): Descriptive analysis, trend visualization, and feature relationship assessment.
+
+   Model Development & Evaluation (2 weeks): Multimodal model training, performance evaluation, and comparative analysis.
+
 **2. Project Goals**
   
    Succesfully predict whether a Tiktok video will preform better than average using its caption text, hashtags, visual content, and early engagement metrics within the first 24–72 hours after posting while
