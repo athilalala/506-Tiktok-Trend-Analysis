@@ -15,7 +15,6 @@ Predict whether a TikTok video will go viral (above-median view count) using fea
 Evaluate whether combining NLP on transcription text with engagement signals outperforms engagement features alone
 Test model generalization on a completely unseen out-of-distribution dataset
 
-Key finding: Our multimodal DistilBERT model achieves AUC = 0.9943 on the test set. The most surprising result was that claim_status — whether a video makes a factual assertion rather than an opinion — was the dominant predictor, with 98.2% of viral videos being "claim" type content.
 ---
 
 ## How to Build and Run
