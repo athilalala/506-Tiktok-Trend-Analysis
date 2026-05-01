@@ -1,12 +1,9 @@
-# ============================================================
-#  TikTok Virality Prediction — CS 506
 #  Usage:
 #    make install   → install all Python dependencies
 #    make run       → execute baseline notebook end-to-end
 #    make test      → run unit tests
 #    make all       → install + run + test
 #    make clean     → remove generated outputs
-# ============================================================
 
 PYTHON      := python3
 PIP         := $(PYTHON) -m pip
@@ -37,14 +34,14 @@ run:
 		--execute $(NOTEBOOK) \
 		--ExecutePreprocessor.timeout=600 \
 		--output $(OUTPUT_NB)
-	@echo "✅ Baseline complete → see $(OUTPUT_NB)"
+	@echo "Baseline complete → see $(OUTPUT_NB)"
 	@echo "   Transformer model: open transformer.ipynb in Google Colab (T4 GPU)"
 
 # ── Run unit tests ────────────────────────────────────────────
 test:
 	@echo "Running unit tests..."
 	$(PYTHON) -m pytest $(TEST_DIR)/ -v --tb=short
-	@echo "✅ All tests passed"
+	@echo "All tests passed"
 
 # ── Clean generated outputs ───────────────────────────────────
 clean:
@@ -54,7 +51,7 @@ clean:
 	rm -rf __pycache__ .pytest_cache
 	find . -name "*.pyc" -delete
 	find . -name ".DS_Store" -delete
-	@echo "✅ Cleaned"
+	@echo "Cleaned"
 
 # ── Help ──────────────────────────────────────────────────────
 help:
