@@ -1,26 +1,31 @@
 # TikTok Virality Prediction
 ## CS 506 — Final Project
 
-> 🎥 **Video Presentation:** [ADD YOUTUBE LINK HERE before 5/1]
+>  **Video Presentation:** [ADD YOUTUBE LINK HERE before 5/1]
 
 ---
 
 ## Project Description
 
-TikTok has become one of the most influential platforms for viral content, yet the factors that make a video go viral remain poorly understood. This project investigates the drivers of TikTok video virality using a multimodal machine learning approach.
-
-We combine **Natural Language Processing** on video transcription text and captions with **early engagement signals** (likes, shares, comments, video duration) to predict whether a video will perform above average. Our main model is a fine-tuned **DistilBERT transformer** that fuses semantic text understanding with structured engagement metadata — directly addressing the challenge of short, informal social media language that traditional bag-of-words models fail to capture.
-
+This project investigates the factors that drive TikTok video virality using a multimodal machine learning approach. We combine Natural Language Processing on video transcription text with early engagement signals (likes, shares, comments, video duration) to predict whether a TikTok video will perform above average within the first 24–72 hours of posting.
+Our main model is a fine-tuned DistilBERT transformer that fuses semantic text understanding with structured engagement metadata — directly addressing the challenge of short, informal social media language that traditional bag-of-words models fail to capture. We also train a Random Forest baseline using engagement features alone to measure the contribution of text-based NLP.
 **Project goals:**
-- Predict whether a TikTok video will go viral (above-median view count) using features available shortly after posting
-- Evaluate whether combining NLP on transcription text with engagement signals outperforms engagement features alone
-- Test model generalization on a completely unseen out-of-distribution dataset
 
-**Key finding:** Our multimodal DistilBERT model achieves **AUC = 0.9943** on the test set. The most surprising result was that `claim_status` — whether a video makes a factual assertion — was the dominant predictor, with 98.2% of viral videos being "claim" type content.
+Predict whether a TikTok video will go viral (above-median view count) using features available shortly after posting
+Evaluate whether combining NLP on transcription text with engagement signals outperforms engagement features alone
+Test model generalization on a completely unseen out-of-distribution dataset
 
+**Key finding:** Our multimodal DistilBERT model achieves AUC = 0.9943 on the test set. The most surprising result was that claim_status — whether a video makes a factual assertion rather than an opinion — was the dominant predictor, with 98.2% of viral videos being "claim" type content.
 ---
 
 ## How to Build and Run
+
+> **This is the most important section — follow these steps to fully reproduce our results.**
+
+### Prerequisites
+- Python 3.10+
+- GPU recommended for transformer (free T4 on Google Colab)
+- Kaggle account to download datasets
 
 ### Step 1 — Clone the repo
 ```bash
@@ -29,25 +34,38 @@ cd tiktok-virality
 ```
 
 ### Step 2 — Download datasets
-Place both CSVs in the `data/` folder:
+Download both CSVs from Kaggle and place in the `data/` folder:
 
-| File | Source |
+| File | Kaggle Link |
 |---|---|
 | `data/tiktok_dataset.csv` | [yakhyojon/tiktok](https://www.kaggle.com/datasets/yakhyojon/tiktok) |
 | `data/tiktok_data.csv` | [maratsaratov/tiktok-data](https://www.kaggle.com/datasets/maratsaratov/tiktok-data) |
 
-### Step 3 — Install and run
+### Step 3 — Install dependencies and run
 ```bash
-make install    # installs all dependencies
-make run        # runs baseline notebook
-make test       # runs unit tests
-make all        # does all three
+make install    # pip installs all dependencies from requirements.txt
+make run        # executes baseline.ipynb and saves outputs
+make test       # runs unit tests in tests/
+make all        # runs all three steps above
 ```
 
-### Google Colab (recommended for transformer)
-1. Upload both CSVs via the Files panel (📁 sidebar)
-2. `baseline.ipynb` — CPU, ~5 min
-3. `transformer.ipynb` — Runtime → Change runtime type → **T4 GPU** → Run All (~30 min)
+### Step 4 — Run on Google Colab (required for transformer model)
+The transformer model requires a GPU. Run it on Google Colab:
+
+1. Go to [colab.research.google.com](https://colab.research.google.com) and open `transformer.ipynb`
+2. Select **Runtime → Change runtime type → T4 GPU**
+3. Upload `tiktok_dataset.csv` and `tiktok_data.csv` using the 📁 Files panel
+4. Click **Runtime → Run All** — completes in ~30 minutes
+
+The baseline model (`baseline.ipynb`) runs on CPU and completes in ~5 minutes via `make run`.
+
+### Testing & CI
+```bash
+make test
+# or directly: pytest tests/ -v
+```
+Unit tests in `tests/test_pipeline.py` cover label logic, data cleaning, and model smoke tests.
+The GitHub Actions workflow (`.github/workflows/ci.yml`) runs all tests automatically on every push.
 
 ---
 
@@ -57,22 +75,20 @@ make all        # does all three
 tiktok-virality/
 ├── baseline.ipynb           ← Random Forest baseline model
 ├── transformer.ipynb        ← Multimodal DistilBERT (main model)
-├── Makefile
-├── requirements.txt
+├── Makefile                 ← install / run / test
+├── requirements.txt         ← all dependencies
 ├── README.md                ← this file
 ├── data/
 │   ├── tiktok_dataset.csv   ← primary dataset (gitignored)
 │   └── tiktok_data.csv      ← OOD test dataset (gitignored)
-├── visualizations/
+├── visualizations/          ← saved figures
 └── tests/
-    └── test_pipeline.py
+    └── test_pipeline.py     ← unit tests
 ```
 
 ---
 
 ## Data Collection
-
-### Sources
 
 | # | Dataset | Rows | Purpose |
 |---|---------|------|---------|
@@ -81,54 +97,48 @@ tiktok-virality/
 
 **Dataset 1** contains `video_transcription_text` (actual spoken words), `claim_status`, `verified_status`, `author_ban_status`, and full engagement metrics — making it ideal for a multimodal NLP approach.
 
-**Dataset 2** was never used during training. It serves exclusively as an out-of-distribution test to measure how well the model generalizes to completely unseen data from a different source.
+**Dataset 2** was never seen during training. It serves exclusively as an out-of-distribution test to measure how well the model generalizes to completely unseen data from a different source.
 
-Both datasets are publicly available from Kaggle, ethically collected from TikTok's public content.
+Both datasets are publicly available on Kaggle, ethically collected from TikTok's public content.
 
 ---
 
-## Data Cleaning
+## Data Processing
 
-Key steps applied in both notebooks:
-
+### Cleaning steps (both notebooks)
 - **Numeric coercion** — all engagement columns converted via `pd.to_numeric(errors='coerce').fillna(0)`
 - **Missing text** — `video_transcription_text` nulls filled with empty string
 - **Categorical encoding** — `verified_status` and `author_ban_status` label-encoded
-- **Virality label** — `is_viral = 1` if `video_view_count > median`, else `0`. Median = **9,788 views**, producing a balanced 50/50 split
-- **OOD filter** — Dataset 2 contains Russian-language videos, filtered via Cyrillic regex `[А-Яа-яЁё]` (760 → 565 English rows)
-- **Stop word removal (transformer)** — domain-specific words like `'claim'`, `'viral'`, `'fyp'` removed from transcription text to prevent the model from shortcutting on dataset artifacts
+- **Virality label** — `is_viral = 1` if `video_view_count > median`, else `0`. Median = **9,788 views**, giving a balanced 50/50 split
+- **OOD Cyrillic filter** — Dataset 2 filtered via regex `[А-Яа-яЁё]` to keep English-only rows (760 → 565)
+- **Stop word removal (transformer only)** — domain words like `'claim'`, `'viral'`, `'fyp'` removed via compiled regex to prevent the model shortcutting on dataset-specific artifacts
 
----
+> ⚠️ `video_view_count` is **excluded from all features** — it directly defines the viral label and including it would be data leakage.
 
-## Feature Extraction
+### Feature extraction
 
-### Baseline features (Random Forest)
-7 structured features: `video_like_count`, `video_share_count`, `video_download_count`, `video_comment_count`, `video_duration_sec`, `verified_status` (encoded), `author_ban_status` (encoded)
+**Baseline (Random Forest)** — 7 structured engagement features:
+`video_like_count`, `video_share_count`, `video_download_count`, `video_comment_count`, `video_duration_sec`, `verified_status` (encoded), `author_ban_status` (encoded)
 
-### Transformer features (Main model)
+**Main model (DistilBERT)** — multimodal features:
 
 | Feature | Branch | Method |
 |---|---|---|
-| `video_transcription_text` | Text | DistilBERT tokenizer, max_length=128, custom stop words removed |
+| `video_transcription_text` | Text | DistilBERT tokenizer, max_length=128, stop words removed |
 | `video_duration_sec` | Numeric | Standardized using training set mean/std |
 | `verified_status` | Numeric | LabelEncoder |
 | `author_ban_status` | Numeric | LabelEncoder |
 
-> ⚠️ `video_view_count` is **excluded from all features** — it defines the viral label and would cause data leakage.
-
 ---
 
-## Model Training & Evaluation
+## Modeling
 
 ### Baseline: Random Forest
 
-A Random Forest classifier trained on 7 engagement features to establish a performance baseline. 80/20 stratified split, `n_estimators=100`, `max_depth=10`.
+Trained on 7 engagement features as a performance baseline. 80/20 stratified split, `n_estimators=100`, `max_depth=10`.
 
-**Results:**
 ```
-ROC-AUC  : 0.9888
-Accuracy : 0.97
-F1       : 0.97
+ROC-AUC : 0.9888  |  F1 : 0.97  |  Accuracy : 0.97
 ```
 
 ---
@@ -136,7 +146,7 @@ F1       : 0.97
 ### Main Model: Multimodal DistilBERT Transformer
 
 **Why DistilBERT:**
-TikTok captions are short, informal, and context-dependent — "this is fire 🔥" signals virality, not combustion. Standard bag-of-words models miss this entirely. DistilBERT understands semantic meaning in context and is 40% smaller / 60% faster than full BERT while retaining 97% of its performance, making it practical on Colab's GPU.
+TikTok captions are short, informal, and context-dependent — "this is fire 🔥" signals virality, not combustion. DistilBERT understands semantic meaning in context and is 40% smaller and 60% faster than full BERT while retaining 97% of its performance — practical for Colab's GPU environment.
 
 **Architecture:**
 ```
@@ -145,14 +155,13 @@ video_transcription_text ──► DistilBERT ──► [CLS] token (768-dim) �
 video_duration_sec, etc. ────► Linear(n→32) ──► BatchNorm ──► ReLU ──┘
 ```
 
-Two separate branches — one for text (DistilBERT), one for numeric metadata — fused at the classification head. This multimodal design lets each branch specialize before combining signals.
+Two branches — text (DistilBERT) and numeric metadata — fused at the classification head. Each branch specializes before combining signals.
 
-**Training details:**
+**Training:**
 - 80/20 stratified train/test split
 - Loss: `BCEWithLogitsLoss`
-- Optimizer: AdamW with **differential learning rates** — numeric/fusion layers = 1e-3, BERT weights protected at lower rate to prevent catastrophic forgetting
-- Early stopping (patience=3) on validation loss
-- Max 20 epochs, stopped at epoch 3
+- AdamW with **differential learning rates** (numeric layers = 1e-3, BERT weights protected to prevent catastrophic forgetting)
+- Early stopping patience=3 on validation loss — stopped at epoch 3
 
 **Training log:**
 ```
@@ -161,31 +170,48 @@ Epoch 2 | Train Loss: 0.0628 | Val Loss: 0.0617 | Val AUC: 0.9936  ← counter: 
 Epoch 3 | Train Loss: 0.0611 | Val Loss: 0.0604 | Val AUC: 0.9943  ← best checkpoint saved
 Epoch 4 | Train Loss: 0.0572 | Val Loss: 0.0640 | Val AUC: 0.9931  ← counter: 1/3
 Epoch 5 |                                                              ← counter: 2/3
-→ Early stopping. Best model restored from epoch 3.
+→ Early stopping triggered. Best model restored from epoch 3.
 ```
 
-**Test set results:**
+**In-distribution test results:**
 ```
-ROC-AUC  : 0.9943
-F1       : 0.99
-Accuracy : 0.99
+ROC-AUC : 0.9943  |  F1 : 0.99  |  Accuracy : 0.99
 
               precision  recall  f1-score  support
 Not Viral         0.99    0.99      0.99     1968
 Viral             0.99    0.99      0.99     1909
 ```
 
-**Cross-dataset (OOD) evaluation on Dataset 2:**
+**Cross-dataset (OOD) results — Dataset 2 (never seen during training):**
 ```
-ROC-AUC  : 0.5238  (565 English-only videos)
-Accuracy : 0.52
+ROC-AUC : 0.5238  |  Accuracy : 0.52  (565 English-only videos)
 ```
 
-**Discussion of limitations:**
-- **OOD performance drops to 0.52** — near random. The model relied heavily on `claim_status` which is unavailable in Dataset 2. This reveals the model learned dataset-specific patterns rather than universal virality signals
-- **Engagement leakage** — `video_like_count` and `video_share_count` accumulate after posting; in a true real-time system these would be unavailable at t=0
-- **Dataset bias** — 98.2% of viral videos in Dataset 1 are "claim" type content. The model may underperform on entertainment or dance content that dominates real TikTok trending pages
-- **Future work** — text-only prediction at posting time, larger and more diverse training data, temporal features (posting hour, day of week)
+**Limitations:**
+- OOD AUC drops to 0.52 because `claim_status` — the dominant predictor — is unavailable in Dataset 2
+- `video_like_count` and `video_share_count` accumulate after posting; unavailable at true t=0 prediction time
+- Dataset 1 is 98.2% "claim" content — model may underperform on dance or entertainment videos
+- Future work: text-only prediction at posting time, temporal features, more diverse training data
+
+---
+
+## Visualizations
+
+Both notebooks generate inline visualizations. Key figures:
+
+| Figure | What it shows | Claim supported |
+|---|---|---|
+| Views distribution (raw + log) | Extreme skew in view counts | Justifies log transformation and median split |
+| Engagement correlation heatmap | Pearson correlation of all features with virality | Likes/shares most correlated with viral label |
+| Duration vs virality bar chart | Viral rate by video length bucket | Short videos go viral at higher rates |
+| Share count boxplot | Log share counts — viral vs not viral | Clear class separation confirms shares as strong signal |
+| Claim vs opinion pie chart | Claim/opinion breakdown in viral videos | 98.2% of viral videos are claim-type content |
+| Random Forest feature importance | Top features ranked by importance | Likes and shares dominate over text features |
+| DistilBERT training curves | Loss and AUC per epoch | Stable convergence, early stopping at epoch 3 |
+| Confusion matrix | Predicted vs actual on test set | Near-perfect in-distribution classification |
+| OOD probability distribution | Predicted probability KDE on Dataset 2 | Shows model uncertainty on unseen data |
+
+> Interactive versions of the views distribution, correlation heatmap, and model comparison can be generated using Plotly — uncomment the Plotly cells at the end of `baseline.ipynb`.
 
 ---
 
@@ -204,53 +230,14 @@ Result  : AUC = 0.9943 ✅   (Random Forest baseline: 0.9888 ✅)
 | Model | AUC-ROC | F1 | Accuracy | Notes |
 |---|---|---|---|---|
 | Random Forest (baseline) | 0.9888 | 0.97 | 0.97 | Engagement features only |
-| **DistilBERT (main model)** | **0.9943** | **0.99** | **0.99** | Text + engagement, in-distribution |
-| DistilBERT OOD | 0.5238 | 0.57 | 0.52 | Generalization to unseen dataset |
+| **DistilBERT (main)** | **0.9943** | **0.99** | **0.99** | Text + engagement, in-distribution |
+| DistilBERT OOD | 0.5238 | 0.57 | 0.52 | Cross-dataset generalization |
 
 ### Key findings
-
-1. **`claim_status` dominates** — 98.2% of viral videos (9,512/9,691) are "claim" type. This single metadata feature drives most of the predictive power
+1. **`claim_status` dominates** — 98.2% of viral videos are "claim" type. This single feature drives most of the predictive power
 2. **Engagement signals are highly predictive** — `video_like_count` and `video_share_count` are the top features in the Random Forest importance ranking
 3. **DistilBERT outperforms Random Forest** — AUC 0.9943 vs 0.9888, confirming semantic text understanding adds measurable signal
-4. **OOD generalization fails** — performance collapses on Dataset 2, highlighting the challenge of building truly generalizable virality models across different data sources
+4. **OOD generalization fails** — performance collapses on Dataset 2, highlighting the challenge of building truly generalizable virality models
 
 ---
-
-## Visualizations
-
-| Figure | Notebook | What it shows |
-|---|---|---|
-| Views distribution (raw + log scale) | baseline | Justifies log transformation and median-split labeling |
-| Engagement correlation heatmap | baseline | Likes/shares most correlated with viral label |
-| Duration vs virality bar chart | baseline | Short videos (<30s) go viral at higher rates |
-| Share count boxplot | baseline | Clear separation between viral/non-viral share counts |
-| Claim vs opinion pie chart | baseline | 98.2% of viral videos are claims |
-| Random Forest feature importance | baseline | Likes and shares dominate |
-| DistilBERT training curves | transformer | Stable convergence, early stopping at epoch 3 |
-| Confusion matrix | transformer | Near-perfect in-distribution classification |
-| OOD probability distribution | transformer | Model uncertainty on unseen data |
-
----
-
-## Testing
-
-```bash
-make test
-# or: pytest tests/ -v
-```
-
-Tests in `tests/test_pipeline.py` cover label definition logic, numeric coercion, missing value handling, and a full Random Forest smoke test. CI runs automatically on every push via `.github/workflows/ci.yml`.
-
----
-
-## Dependencies
-
-```
-torch>=2.0          transformers>=4.30    scikit-learn>=1.3
-xgboost>=1.7        pandas>=2.0           numpy>=1.24
-matplotlib>=3.7     seaborn>=0.12         pytest>=7.4
-jupyter             nbconvert
-```
-
-Install: `make install`
 
