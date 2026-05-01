@@ -254,11 +254,3 @@ jupyter             nbconvert
 
 Install: `make install`
 
----
-
-## Team
-
-| Name | Contribution |
-|---|---|
-| [Your name] | Data cleaning, EDA, visualizations, baseline model, README, tests, Makefile |
-| [Teammate name] | Multimodal DistilBERT architecture, transformer training, OOD evaluation |
