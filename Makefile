@@ -1,5 +1,3 @@
-# ============================================================
-#  TikTok Virality Prediction — CS 506
 #  Usage:
 #    make install   → install all Python dependencies
 #    make run       → execute baseline notebook end-to-end
@@ -9,7 +7,6 @@
 #
 #  NOTE: transformer.ipynb requires a GPU — run it on
 #        Google Colab (Runtime → T4 GPU → Run All)
-# ============================================================
 
 PYTHON    := python3
 PIP       := $(PYTHON) -m pip
