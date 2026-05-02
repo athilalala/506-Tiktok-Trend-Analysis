@@ -11,7 +11,7 @@
 PYTHON    := python3
 PIP       := $(PYTHON) -m pip
 VIZ_DIR   := visualizations
-TEST_DIR  := .
+TEST_DIR  := test.py
 
 .PHONY: all install run test clean help
 
@@ -44,7 +44,7 @@ run:
 # ── Tests ─────────────────────────────────────────────────────
 test:
 	@echo "Running unit tests..."
-	$(PYTHON) -m pytest $(TEST_DIR)/ -v --tb=short
+	$(PYTHON) -m pytest test.py -v --tb=short
 	@echo " All tests passed"
 
 # ── Clean ─────────────────────────────────────────────────────
