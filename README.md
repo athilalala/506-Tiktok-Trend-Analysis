@@ -22,8 +22,6 @@ We fine-tune a **DistilBERT transformer** with a multimodal fusion architecture 
 
 ## How to Build and Run
 
-> **This is the most important section — follow these steps to fully reproduce our results.**
-
 ### Prerequisites
 - Python 3.10+
 - GPU required for transformer (free T4 on Google Colab)
