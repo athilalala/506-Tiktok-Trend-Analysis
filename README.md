@@ -258,7 +258,7 @@ make test
 # or: pytest tests/ -v
 ```
 
-7 tests in `tests/test_pipeline.py` covering the transformer pipeline: label definition, numeric coercion, missing text handling, label encoding, tokenizer input validation, and feature standardization. CI runs on every push via `.github/workflows/ci.yml`.
+7 tests in `test.py` covering the transformer pipeline: label definition, numeric coercion, missing text handling, label encoding, tokenizer input validation, and feature standardization. CI runs on every push via `.github/workflows/ci.yml`.
 
 ---
 
