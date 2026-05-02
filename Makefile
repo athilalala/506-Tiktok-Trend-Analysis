@@ -23,11 +23,12 @@ install:
 	@echo "Installing dependencies..."
 	$(PIP) install --upgrade pip --quiet
 	$(PIP) install -r requirements.txt --quiet
-	@echo " Dependencies installed"
+	@echo "✅ Dependencies installed"
 
 # ── Run baseline (CPU, ~5 min) ────────────────────────────────
 run:
 	@echo "Running baseline notebook..."
+	@echo "Datasets already in data/ folder (committed to repo)"
 	@mkdir -p $(VIZ_DIR)
 	jupyter nbconvert \
 		--to notebook \
@@ -44,7 +45,7 @@ run:
 test:
 	@echo "Running unit tests..."
 	$(PYTHON) -m pytest $(TEST_DIR)/ -v --tb=short
-	@echo "All tests passed"
+	@echo " All tests passed"
 
 # ── Clean ─────────────────────────────────────────────────────
 clean:
@@ -54,7 +55,7 @@ clean:
 	rm -rf __pycache__ .pytest_cache
 	find . -name "*.pyc" -delete
 	find . -name ".DS_Store" -delete
-	@echo "Cleaned"
+	@echo " Cleaned"
 
 # ── Help ──────────────────────────────────────────────────────
 help:
