@@ -29,8 +29,8 @@ We fine-tune a **DistilBERT transformer** with a multimodal fusion architecture 
 
 ### Step 1 — Clone the repo
 ```bash
-git clone https://github.com/<your-username>/tiktok-virality
-cd tiktok-virality
+git clone https://github.com/athilalala/506-Tiktok-Trend-Analysis
+cd 506-Tiktok-Trend-Analysis
 ```
 
 ### Step 2 — Get the datasets
