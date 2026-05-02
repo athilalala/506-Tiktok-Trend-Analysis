@@ -11,7 +11,7 @@
 PYTHON    := python3
 PIP       := $(PYTHON) -m pip
 VIZ_DIR   := visualizations
-TEST_DIR  := tests
+TEST_DIR  := .
 
 .PHONY: all install run test clean help
 
