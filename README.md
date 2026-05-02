@@ -1,7 +1,7 @@
 # TikTok Virality Prediction
 ## CS 506 — Final Project
 
->  **Video Presentation:** [ADD YOUTUBE LINK HERE before 5/1]
+> **Video Presentation:** [LINK}
 
 ---
 
@@ -35,8 +35,11 @@ git clone https://github.com/<your-username>/tiktok-virality
 cd tiktok-virality
 ```
 
-### Step 2 — Download datasets
-Download both CSVs from Kaggle and place in the `data/` folder:
+### Step 2 — Get the datasets
+
+Both datasets are already included in this repository under `data/`. If you have cloned the repo, they are already there — skip to Step 3.
+
+If you prefer to download directly from Kaggle:
 
 | File | Kaggle Link |
 |---|---|
@@ -54,7 +57,7 @@ make all        # runs all three steps above
 ### Step 4 — Run transformer on Google Colab (GPU required)
 1. Go to [colab.research.google.com](https://colab.research.google.com) and open `transformer.ipynb`
 2. Select **Runtime → Change runtime type → T4 GPU**
-3. Upload `tiktok_dataset.csv` and `tiktok_data.csv` via the 📁 Files panel
+3. The datasets are already in `data/` — either clone the repo in Colab or upload `tiktok_dataset.csv` and `tiktok_data.csv` via the 📁 Files panel
 4. Click **Runtime → Run All** (~30 min)
 5. Then run `transformer_visualizations.ipynb` to generate all result figures
 
@@ -79,8 +82,8 @@ tiktok-virality/
 ├── requirements.txt
 ├── README.md
 ├── data/
-│   ├── tiktok_dataset.csv          ← primary dataset (gitignored)
-│   └── tiktok_data.csv             ← OOD test dataset (gitignored)
+│   ├── tiktok_dataset.csv          ← primary dataset (included in repo)
+│   └── tiktok_data.csv             ← OOD test dataset (included in repo)
 ├── visualizations/                 ← saved figures (PNGs + interactive HTMLs)
 ├── tests/
 │   └── test_pipeline.py
@@ -102,7 +105,7 @@ tiktok-virality/
 
 **Dataset 2** was never seen during training — used exclusively as an out-of-distribution test.
 
-Both datasets are publicly available on Kaggle, ethically collected from TikTok's public content.
+Both datasets are included in the `data/` folder of this repository for full reproducibility. They are also publicly available on Kaggle if you prefer to download them directly.
 
 ---
 
@@ -231,7 +234,7 @@ Run `visualizations.ipynb` for EDA figures (views distribution, correlation heat
 ```
 Goal    : Predict above-average TikTok video performance
 Metric  : AUC-ROC significantly above random baseline (0.50)
-Result  : AUC = 0.9943 ✅
+Result  : AUC = 0.9943 
 ```
 
 ### Model comparison
@@ -273,3 +276,4 @@ jupyter>=1.0.0        nbconvert>=7.0.0        pytest>=7.4.0
 Install: `make install`
 
 ---
+
