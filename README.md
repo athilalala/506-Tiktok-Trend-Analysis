@@ -1,7 +1,7 @@
 # TikTok Virality Prediction
 ## CS 506 — Final Project
 
-> **Video Presentation:** [https://vimeo.com/1188576629?share=copy&fl=sv&fe=ci]
+ **Video Presentation:** [https://www.youtube.com/watch?v=oTZP_s8B4I0]
 
 ---
 
