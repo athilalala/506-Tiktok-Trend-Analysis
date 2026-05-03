@@ -1,5 +1,6 @@
 # TikTok Virality Prediction
 ## CS 506 — Final Project
+Athila Koli, Zijiang Zhao, Ebrahim Darbo
 
  **Video Presentation:** [https://www.youtube.com/watch?v=oTZP_s8B4I0]
 
